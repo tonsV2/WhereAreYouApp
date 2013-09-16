@@ -30,6 +30,10 @@ import android.util.Log;
 import android.net.Uri;
 import android.app.Notification;
 
+import android.content.ContentResolver;
+import android.provider.ContactsContract.PhoneLookup;
+import android.database.Cursor;
+
 
 /**
  * This {@code IntentService} does the actual handling of the GCM message.
@@ -55,7 +59,7 @@ public class GcmIntentService extends IntentService {
 	String phoneNumber = intent.getStringExtra("phone_number");
 
 	Uri uri = Uri.parse("geo:0,0?q=" + latitude + "," + longitude + "&z=10");
-	String message = "Location received from... " + phoneNumber;
+	String message = "Location received from... " + getContactName(this, phoneNumber);
 	sendNotification(message, uri);
 
 //        Bundle extras = intent.getExtras();
@@ -102,7 +106,7 @@ public class GcmIntentService extends IntentService {
 // Build notification
                 Notification notification = new NotificationCompat.Builder(this)
                         .setContentTitle(title)
-                        .setContentText(uri.toString())
+                        .setContentText("")
                         .setSmallIcon(R.drawable.ic_launcher)
                         .setContentIntent(pIntent)
                         .build();
@@ -135,6 +139,26 @@ public class GcmIntentService extends IntentService {
 
         mBuilder.setContentIntent(contentIntent);
         mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+    }
+
+/* Get name of contact by phone number
+ * http://stackoverflow.com/questions/3079365/android-retrieve-contact-name-from-phone-number
+ */
+    public static String getContactName(Context context, String phoneNumber) {
+        ContentResolver cr = context.getContentResolver();
+        Uri uri = Uri.withAppendedPath(PhoneLookup.CONTENT_FILTER_URI, Uri.encode(phoneNumber));
+        Cursor cursor = cr.query(uri, new String[]{PhoneLookup.DISPLAY_NAME}, null, null, null);
+        if (cursor == null) {
+            return null;
+        }
+        String contactName = null;
+        if(cursor.moveToFirst()) {
+            contactName = cursor.getString(cursor.getColumnIndex(PhoneLookup.DISPLAY_NAME));
+        }
+        if(cursor != null && !cursor.isClosed()) {
+            cursor.close();
+        }
+        return contactName;
     }
 }
 
