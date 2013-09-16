@@ -33,7 +33,6 @@ import java.util.ArrayList;
 /**
  * GCM - http://developer.android.com/google/gcm/client.html
  *       https://code.google.com/p/gcm/
- *
  */
 
 
@@ -67,6 +66,10 @@ public class MainActivity extends Activity {
 			if (regid.isEmpty()) {
 				registerInBackground();
 			}
+			else
+			{
+				pickContact();
+			}
 		}
 		else
 		{
@@ -76,7 +79,7 @@ public class MainActivity extends Activity {
 
         /** Shows contact picker dialog
          */
-        public void pickContact(View view) {
+        public void pickContact() {
             Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
             intent.setType(Phone.CONTENT_TYPE); // Show user only contacts w/ phone numbers
             startActivityForResult(intent, PICK_CONTACT_REQUEST);
@@ -112,12 +115,9 @@ public class MainActivity extends Activity {
 
 	private void handleContact(Intent intent)
 	{
-		String phoneNumber = getPhoneNumber(intent);
+		final String phoneNumber = getPhoneNumber(intent);
 		Toast.makeText(this, "Phone: " + phoneNumber, Toast.LENGTH_SHORT).show();
 
-
-        // TODO: possible use google url shortner
-        // Prepare url
 		String url = "";
                 try {
 			String regId = getRegistrationId(this);
@@ -128,12 +128,26 @@ public class MainActivity extends Activity {
                         e.printStackTrace();
                 }
 
-		String message = "Where are you? Please click the following url to let me know.\n" + url;
-
-		//send sms to contact with url
-		sendSMS(phoneNumber, message);
-		Toast.makeText(this, "SMS send to " + phoneNumber + ".\nAwaiting response...", Toast.LENGTH_SHORT).show();
+		ShortenUrlTask task = new ShortenUrlTask() {
+			@Override
+			protected void onPostExecute(String result) {
+				String message = "Where are you? Please click the following url to let me know.\n" + result;
+				sendSMS(phoneNumber, message);
+				exitApp();
+			}
+		};
+		task.execute(url);
+//		Toast.makeText(this, "SMS send to " + phoneNumber + ".\nAwaiting response...", Toast.LENGTH_SHORT).show();
         }
+
+	private void exitApp()
+	{
+		Intent intent = new Intent(Intent.ACTION_MAIN);
+		intent.addCategory(Intent.CATEGORY_HOME);
+		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		startActivity(intent);	
+	}
+
 
         /** SMS sender with support for big messages
          * @param phoneNumber
@@ -274,6 +288,7 @@ public class MainActivity extends Activity {
             @Override
             protected void onPostExecute(String msg) {
                 mDisplay.append(msg + "\n");
+		pickContact();
             }
         }.execute(null, null, null);
     }
