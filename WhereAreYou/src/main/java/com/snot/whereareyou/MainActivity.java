@@ -18,8 +18,15 @@ import android.provider.ContactsContract;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.content.Intent;
 import android.view.View;
+import android.net.Uri;
+import android.database.Cursor;
+import android.telephony.SmsManager;
 
+
+import java.net.URLEncoder;
+import java.io.UnsupportedEncodingException;
 import java.io.IOException;
+import java.util.ArrayList;
 
 
 /**
@@ -78,10 +85,62 @@ public class MainActivity extends Activity {
 		super.onActivityResult( requestCode, resultCode, intent );
 		if(resultCode == RESULT_OK) {
 			if(requestCode == PICK_CONTACT_REQUEST) {
-			//	handleContact(intent);
-				Toast.makeText(this, getRegistrationId(this), Toast.LENGTH_SHORT).show();
+				handleContact(intent);
 			}
 		}
+	}
+
+	private String getPhoneNumber(Intent intent)
+	{
+		Uri contact = intent.getData();
+		String[] projection = {Phone.NUMBER};
+		Cursor cursor = getContentResolver().query(contact, projection, null, null, null);
+		cursor.moveToFirst();
+		// Retrieve the phone number from the NUMBER column
+		int column = cursor.getColumnIndex(Phone.NUMBER);
+		String phoneNumber = null;
+		if(column != -1)
+		{
+			phoneNumber = cursor.getString(column);
+		}
+		cursor.close();
+		return phoneNumber;
+	}
+
+	private void handleContact(Intent intent)
+	{
+		String phoneNumber = getPhoneNumber(intent);
+
+
+        // TODO: possible use google url shortner
+        // Prepare url
+        String url = "";
+                try {
+			String regId = getRegistrationId(this);
+                        String query = "?regId=" + URLEncoder.encode(regId, "UTF-8") + "&phoneNumber=" + URLEncoder.encode(phoneNumber, "UTF-8");
+                        url = "https://whereareyoudroid.appspot.com/location" + query;
+                } catch (UnsupportedEncodingException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                }
+
+        String message = "Where are you? Please click the following url to let me know.\n" + url;
+
+        //send sms to contact with url
+        sendSMS(phoneNumber, message);
+        Toast.makeText(this, "SMS send to " + phoneNumber + ".\nAwaiting response...", Toast.LENGTH_SHORT).show();
+        }
+
+        /** SMS sender with support for big messages
+         * @param phoneNumber
+         * @param message
+         */
+	private void sendSMS(String phoneNumber, String message)
+	{
+		Log.v(TAG, String.format("sendSMS(%s, %s)", phoneNumber, message));
+		SmsManager sms = SmsManager.getDefault();
+		ArrayList<String> parts = sms.divideMessage(message);
+		sms.sendMultipartTextMessage(phoneNumber, null, parts, null, null);
 	}
 
 //    @Override

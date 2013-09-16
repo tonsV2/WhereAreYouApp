@@ -1,0 +1,6 @@
+
+logo
+	http://www.newwinechurch.com/wp-content/uploads/2013/02/whereareyou7.jpg
+	https://play.google.com/store/apps/details?id=net.DailyTimer.imadocoFree
+
+
