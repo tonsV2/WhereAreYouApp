@@ -13,11 +13,19 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.TextView;
-
+import android.widget.Toast;
+import android.provider.ContactsContract;
+import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.content.Intent;
+import android.view.View;
 
 import java.io.IOException;
 
+
+/**
+ * GCM - http://developer.android.com/google/gcm/client.html
+ *
+ */
 
 
 public class MainActivity extends Activity {
@@ -57,6 +65,24 @@ public class MainActivity extends Activity {
 		}
 	}
 
+        /** Shows contact picker dialog
+         */
+        public void pickContact(View view) {
+            Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+            intent.setType(Phone.CONTENT_TYPE); // Show user only contacts w/ phone numbers
+            startActivityForResult(intent, PICK_CONTACT_REQUEST);
+        }
+
+	@Override
+	public void onActivityResult( int requestCode, int resultCode, Intent intent ) {
+		super.onActivityResult( requestCode, resultCode, intent );
+		if(resultCode == RESULT_OK) {
+			if(requestCode == PICK_CONTACT_REQUEST) {
+			//	handleContact(intent);
+				Toast.makeText(this, getRegistrationId(this), Toast.LENGTH_SHORT).show();
+			}
+		}
+	}
 
 //    @Override
 //    public boolean onCreateOptionsMenu(Menu menu) {
