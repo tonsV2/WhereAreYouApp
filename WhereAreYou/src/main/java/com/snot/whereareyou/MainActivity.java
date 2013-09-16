@@ -33,6 +33,10 @@ import java.util.ArrayList;
 /**
  * GCM - http://developer.android.com/google/gcm/client.html
  *       https://code.google.com/p/gcm/
+ *
+ * TODO
+ *  - Remove hardcoded strings
+ *  - move api key in to main activity as static property
  */
 
 
@@ -116,7 +120,6 @@ public class MainActivity extends Activity {
 	private void handleContact(Intent intent)
 	{
 		final String phoneNumber = getPhoneNumber(intent);
-		Toast.makeText(this, "Phone: " + phoneNumber, Toast.LENGTH_SHORT).show();
 
 		String url = "";
                 try {
@@ -133,6 +136,7 @@ public class MainActivity extends Activity {
 			protected void onPostExecute(String result) {
 				String message = "Where are you? Please click the following url to let me know.\n" + result;
 				sendSMS(phoneNumber, message);
+				Toast.makeText(this, "Location request sent", Toast.LENGTH_SHORT).show();
 				exitApp();
 			}
 		};
