@@ -21,6 +21,7 @@ import android.view.View;
 import android.net.Uri;
 import android.database.Cursor;
 import android.telephony.SmsManager;
+import android.app.PendingIntent;
 
 
 import java.net.URLEncoder;
@@ -31,6 +32,7 @@ import java.util.ArrayList;
 
 /**
  * GCM - http://developer.android.com/google/gcm/client.html
+ *       https://code.google.com/p/gcm/
  *
  */
 
@@ -83,6 +85,7 @@ public class MainActivity extends Activity {
 	@Override
 	public void onActivityResult( int requestCode, int resultCode, Intent intent ) {
 		super.onActivityResult( requestCode, resultCode, intent );
+		//if(resultCode != RESULT_CANCELED && resultCode == RESULT_OK) {
 		if(resultCode == RESULT_OK) {
 			if(requestCode == PICK_CONTACT_REQUEST) {
 				handleContact(intent);
@@ -110,25 +113,26 @@ public class MainActivity extends Activity {
 	private void handleContact(Intent intent)
 	{
 		String phoneNumber = getPhoneNumber(intent);
+		Toast.makeText(this, "Phone: " + phoneNumber, Toast.LENGTH_SHORT).show();
 
 
         // TODO: possible use google url shortner
         // Prepare url
-        String url = "";
+		String url = "";
                 try {
 			String regId = getRegistrationId(this);
-                        String query = "?regId=" + URLEncoder.encode(regId, "UTF-8") + "&phoneNumber=" + URLEncoder.encode(phoneNumber, "UTF-8");
+			String query = "?regId=" + URLEncoder.encode(regId, "UTF-8") + "&phoneNumber=" + URLEncoder.encode(phoneNumber, "UTF-8");
                         url = "https://whereareyoudroid.appspot.com/location" + query;
                 } catch (UnsupportedEncodingException e) {
                         // TODO Auto-generated catch block
                         e.printStackTrace();
                 }
 
-        String message = "Where are you? Please click the following url to let me know.\n" + url;
+		String message = "Where are you? Please click the following url to let me know.\n" + url;
 
-        //send sms to contact with url
-        sendSMS(phoneNumber, message);
-        Toast.makeText(this, "SMS send to " + phoneNumber + ".\nAwaiting response...", Toast.LENGTH_SHORT).show();
+		//send sms to contact with url
+		sendSMS(phoneNumber, message);
+		Toast.makeText(this, "SMS send to " + phoneNumber + ".\nAwaiting response...", Toast.LENGTH_SHORT).show();
         }
 
         /** SMS sender with support for big messages
@@ -140,7 +144,11 @@ public class MainActivity extends Activity {
 		Log.v(TAG, String.format("sendSMS(%s, %s)", phoneNumber, message));
 		SmsManager sms = SmsManager.getDefault();
 		ArrayList<String> parts = sms.divideMessage(message);
-		sms.sendMultipartTextMessage(phoneNumber, null, parts, null, null);
+		// TODO: this used to work with null arguments as below... not anymore!!!
+		//sms.sendMultipartTextMessage(phoneNumber, null, parts, null, null);
+		ArrayList<PendingIntent> sentList = new ArrayList<PendingIntent>();
+		ArrayList<PendingIntent> deliveredList = new ArrayList<PendingIntent>();
+		sms.sendMultipartTextMessage(phoneNumber, null, parts, sentList, deliveredList);
 	}
 
 //    @Override

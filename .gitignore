@@ -33,4 +33,5 @@ local.properties
 *.swp
 
 */build/*
+Makefile
 
