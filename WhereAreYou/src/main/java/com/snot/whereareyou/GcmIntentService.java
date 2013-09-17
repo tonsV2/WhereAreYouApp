@@ -33,7 +33,10 @@ import android.app.Notification;
 import android.content.ContentResolver;
 import android.provider.ContactsContract.PhoneLookup;
 import android.database.Cursor;
+//import android.database.sqlite.SQLiteDatabase;
 
+import com.snot.whereareyou.database.History;
+import com.snot.whereareyou.database.DatabaseHandler;
 
 /**
  * This {@code IntentService} does the actual handling of the GCM message.
@@ -57,6 +60,16 @@ public class GcmIntentService extends IntentService {
 	String latitude = intent.getStringExtra("latitude");
 	String longitude = intent.getStringExtra("longitude");
 	String phoneNumber = intent.getStringExtra("phone_number");
+
+	Log.i(TAG, "GCM from: " + phoneNumber);
+
+// Make history... ;)
+	History history = new History();
+	history.latitude = latitude;
+	history.longitude = longitude;
+	history.phoneNumber = phoneNumber;
+	//final SQLiteDatabase db = DatabaseHandler.getInstance(this).putHistory(history);
+	DatabaseHandler.getInstance(this).putHistory(history);
 
 	Uri uri = Uri.parse("geo:0,0?q=" + latitude + "," + longitude + "&z=10");
 	String message = "Location received from... " + getContactName(this, phoneNumber);
@@ -110,10 +123,11 @@ public class GcmIntentService extends IntentService {
                         .setSmallIcon(R.drawable.ic_launcher)
                         .setContentIntent(pIntent)
                         .build();
-// Make sure the notification behaves normal
-                notification.defaults |= Notification.DEFAULT_SOUND;
-                notification.defaults |= Notification.DEFAULT_VIBRATE;
-                notification.defaults |= Notification.DEFAULT_LIGHTS;
+//// Make sure the notification behaves normal
+//                notification.defaults |= Notification.DEFAULT_SOUND;
+//                notification.defaults |= Notification.DEFAULT_VIBRATE;
+//                notification.defaults |= Notification.DEFAULT_LIGHTS;
+		notification.defaults |= Notification.DEFAULT_ALL;
 // Hide the notification after its selected
                 notification.flags |= Notification.FLAG_AUTO_CANCEL;
 

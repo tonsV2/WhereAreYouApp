@@ -19,11 +19,13 @@
     <uses-permission android:name="android.permission.SEND_SMS"/>
     <!-- For looking up name by phone number -->
     <uses-permission android:name="android.permission.READ_CONTACTS"/>
+    <!-- Mandatory in order for notifications to have default behavior -->
+    <uses-permission android:name="android.permission.VIBRATE" />
 
-
+<!-- icon: http://findicons.com/icon/51549/map -->
     <application
         android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@drawable/ic_map"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
@@ -44,6 +46,11 @@
             </intent-filter>
         </receiver>
         <service android:name=".GcmIntentService" />
+        <provider
+                android:name=".database.Provider"
+                android:authorities="com.snot.whereareyou.database.provider"
+                android:enabled="true"
+                android:exported="false" />
     </application>
 
 </manifest>

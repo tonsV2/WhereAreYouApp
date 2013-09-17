@@ -98,6 +98,10 @@ public class MainActivity extends Activity {
 				handleContact(intent);
 			}
 		}
+		if(resultCode == RESULT_CANCELED)
+		{
+			exitApp();
+		}
 	}
 
 	private String getPhoneNumber(Intent intent)
@@ -131,12 +135,13 @@ public class MainActivity extends Activity {
                         e.printStackTrace();
                 }
 
+		final Context context = this;
 		ShortenUrlTask task = new ShortenUrlTask() {
 			@Override
 			protected void onPostExecute(String result) {
-				String message = "Where are you? Please click the following url to let me know.\n" + result;
+				String message = "Where are you? Please click the following link to let me know.\n" + result;
 				sendSMS(phoneNumber, message);
-				Toast.makeText(this, "Location request sent", Toast.LENGTH_SHORT).show();
+				Toast.makeText(context, "Location request sent", Toast.LENGTH_SHORT).show();
 				exitApp();
 			}
 		};
@@ -144,12 +149,14 @@ public class MainActivity extends Activity {
 //		Toast.makeText(this, "SMS send to " + phoneNumber + ".\nAwaiting response...", Toast.LENGTH_SHORT).show();
         }
 
+// http://stackoverflow.com/questions/3226495/android-exit-application-code
 	private void exitApp()
 	{
 		Intent intent = new Intent(Intent.ACTION_MAIN);
 		intent.addCategory(Intent.CATEGORY_HOME);
 		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		startActivity(intent);	
+		finish();
 	}
 
 
