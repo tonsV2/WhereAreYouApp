@@ -23,12 +23,16 @@ import android.database.Cursor;
 import android.telephony.SmsManager;
 import android.app.PendingIntent;
 
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+
 
 import java.net.URLEncoder;
 import java.io.UnsupportedEncodingException;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import com.snot.whereareyou.TabsFragmentActivity;
 
 /**
  * GCM - http://developer.android.com/google/gcm/client.html
@@ -40,7 +44,7 @@ import java.util.ArrayList;
  */
 
 
-public class MainActivity extends Activity {
+public class MainActivity extends TabsFragmentActivity {
 
 	public static final String PROPERTY_REG_ID = "registration_id";
 	private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
@@ -60,25 +64,38 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
-		mDisplay = (TextView) findViewById(R.id.display);
+//		setContentView(R.layout.activity_main);
 
-		context = getApplicationContext();
-		if (checkPlayServices()) {
-			gcm = GoogleCloudMessaging.getInstance(this);
-			regid = getRegistrationId(context);
-			if (regid.isEmpty()) {
-				registerInBackground();
-			}
-			else
-			{
-				pickContact();
-			}
-		}
-		else
-		{
-			Log.i(TAG, "No valid Google Play Services APK found.");
-		}
+		this.addTab("hist1", "Main", HistoryListFragment.class);
+		this.addTab("test3", "History", HistoryListFragment.class);
+
+	        restoreFromSavedInstanceState(savedInstanceState);
+
+//	FragmentManager fm = getSupportFragmentManager();
+//	if (fm.findFragmentById(android.R.id.content) == null) {
+//		HistoryListFragment list = new HistoryListFragment();
+//		fm.beginTransaction().add(android.R.id.content, list).commit();
+//	}
+
+
+//		mDisplay = (TextView) findViewById(R.id.display);
+//
+//		context = getApplicationContext();
+//		if (checkPlayServices()) {
+//			gcm = GoogleCloudMessaging.getInstance(this);
+//			regid = getRegistrationId(context);
+//			if (regid.isEmpty()) {
+//				registerInBackground();
+//			}
+//			else
+//			{
+//				pickContact();
+//			}
+//		}
+//		else
+//		{
+//			Log.i(TAG, "No valid Google Play Services APK found.");
+//		}
 	}
 
         /** Shows contact picker dialog
