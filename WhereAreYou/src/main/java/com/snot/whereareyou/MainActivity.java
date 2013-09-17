@@ -23,6 +23,7 @@ import android.database.Cursor;
 import android.telephony.SmsManager;
 import android.app.PendingIntent;
 
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 
@@ -48,7 +49,6 @@ public class MainActivity extends TabsFragmentActivity {
 
 	public static final String PROPERTY_REG_ID = "registration_id";
 	private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
-	private static final int PICK_CONTACT_REQUEST = 1;  // The request code
 	private static final String PROPERTY_APP_VERSION = "appVersion";
 
 	String SENDER_ID = "372247536430";
@@ -64,133 +64,24 @@ public class MainActivity extends TabsFragmentActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-//		setContentView(R.layout.activity_main);
 
-		this.addTab("hist1", "Main", HistoryListFragment.class);
-		this.addTab("test3", "History", HistoryListFragment.class);
-
-	        restoreFromSavedInstanceState(savedInstanceState);
-
-//	FragmentManager fm = getSupportFragmentManager();
-//	if (fm.findFragmentById(android.R.id.content) == null) {
-//		HistoryListFragment list = new HistoryListFragment();
-//		fm.beginTransaction().add(android.R.id.content, list).commit();
-//	}
-
-
-//		mDisplay = (TextView) findViewById(R.id.display);
-//
-//		context = getApplicationContext();
-//		if (checkPlayServices()) {
-//			gcm = GoogleCloudMessaging.getInstance(this);
-//			regid = getRegistrationId(context);
-//			if (regid.isEmpty()) {
-//				registerInBackground();
-//			}
-//			else
-//			{
-//				pickContact();
-//			}
-//		}
-//		else
-//		{
-//			Log.i(TAG, "No valid Google Play Services APK found.");
-//		}
-	}
-
-        /** Shows contact picker dialog
-         */
-        public void pickContact() {
-            Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
-            intent.setType(Phone.CONTENT_TYPE); // Show user only contacts w/ phone numbers
-            startActivityForResult(intent, PICK_CONTACT_REQUEST);
-        }
-
-	@Override
-	public void onActivityResult( int requestCode, int resultCode, Intent intent ) {
-		super.onActivityResult( requestCode, resultCode, intent );
-		//if(resultCode != RESULT_CANCELED && resultCode == RESULT_OK) {
-		if(resultCode == RESULT_OK) {
-			if(requestCode == PICK_CONTACT_REQUEST) {
-				handleContact(intent);
+		context = getApplicationContext();
+		if (checkPlayServices()) {
+			gcm = GoogleCloudMessaging.getInstance(this);
+			regid = getRegistrationId(context);
+			if (regid.isEmpty()) {
+				registerInBackground();
 			}
 		}
-		if(resultCode == RESULT_CANCELED)
+		else
 		{
-			exitApp();
+			Log.i(TAG, "No valid Google Play Services APK found.");
 		}
-	}
 
-	private String getPhoneNumber(Intent intent)
-	{
-		Uri contact = intent.getData();
-		String[] projection = {Phone.NUMBER};
-		Cursor cursor = getContentResolver().query(contact, projection, null, null, null);
-		cursor.moveToFirst();
-		// Retrieve the phone number from the NUMBER column
-		int column = cursor.getColumnIndex(Phone.NUMBER);
-		String phoneNumber = null;
-		if(column != -1)
-		{
-			phoneNumber = cursor.getString(column);
-		}
-		cursor.close();
-		return phoneNumber;
-	}
+		this.addTab("main", "Main", PickContactFragment.class);
+		this.addTab("hist", "History", HistoryListFragment.class);
 
-	private void handleContact(Intent intent)
-	{
-		final String phoneNumber = getPhoneNumber(intent);
-
-		String url = "";
-                try {
-			String regId = getRegistrationId(this);
-			String query = "?regId=" + URLEncoder.encode(regId, "UTF-8") + "&phoneNumber=" + URLEncoder.encode(phoneNumber, "UTF-8");
-                        url = "https://whereareyoudroid.appspot.com/location" + query;
-                } catch (UnsupportedEncodingException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                }
-
-		final Context context = this;
-		ShortenUrlTask task = new ShortenUrlTask() {
-			@Override
-			protected void onPostExecute(String result) {
-				String message = "Where are you? Please click the following link to let me know.\n" + result;
-				sendSMS(phoneNumber, message);
-				Toast.makeText(context, "Location request sent", Toast.LENGTH_SHORT).show();
-				exitApp();
-			}
-		};
-		task.execute(url);
-//		Toast.makeText(this, "SMS send to " + phoneNumber + ".\nAwaiting response...", Toast.LENGTH_SHORT).show();
-        }
-
-// http://stackoverflow.com/questions/3226495/android-exit-application-code
-	private void exitApp()
-	{
-		Intent intent = new Intent(Intent.ACTION_MAIN);
-		intent.addCategory(Intent.CATEGORY_HOME);
-		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		startActivity(intent);	
-		finish();
-	}
-
-
-        /** SMS sender with support for big messages
-         * @param phoneNumber
-         * @param message
-         */
-	private void sendSMS(String phoneNumber, String message)
-	{
-		Log.v(TAG, String.format("sendSMS(%s, %s)", phoneNumber, message));
-		SmsManager sms = SmsManager.getDefault();
-		ArrayList<String> parts = sms.divideMessage(message);
-		// TODO: this used to work with null arguments as below... not anymore!!!
-		//sms.sendMultipartTextMessage(phoneNumber, null, parts, null, null);
-		ArrayList<PendingIntent> sentList = new ArrayList<PendingIntent>();
-		ArrayList<PendingIntent> deliveredList = new ArrayList<PendingIntent>();
-		sms.sendMultipartTextMessage(phoneNumber, null, parts, sentList, deliveredList);
+		restoreFromSavedInstanceState(savedInstanceState);
 	}
 
 //    @Override
@@ -257,7 +148,7 @@ public class MainActivity extends TabsFragmentActivity {
      * @return registration ID, or empty string if there is no existing
      *         registration ID.
      */
-    private String getRegistrationId(Context context) {
+    protected String getRegistrationId(Context context) {
         final SharedPreferences prefs = getGcmPreferences(context);
         String registrationId = prefs.getString(PROPERTY_REG_ID, "");
         if (registrationId.isEmpty()) {
@@ -316,7 +207,6 @@ public class MainActivity extends TabsFragmentActivity {
             @Override
             protected void onPostExecute(String msg) {
                 mDisplay.append(msg + "\n");
-		pickContact();
             }
         }.execute(null, null, null);
     }
