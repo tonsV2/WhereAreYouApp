@@ -54,11 +54,19 @@ public class HistoryListFragment extends ListFragment {
     }
 
     @Override
-    public void onListItemClick(ListView listView, View view, int position, long id) {
-        super.onListItemClick(listView, view, position, id);
-	History history = (History)getListView().getItemAtPosition(position);
+    public void onListItemClick(ListView list, View view, int position, long id) {
+        super.onListItemClick(list, view, position, id);
+	// get cursor
+	Cursor c = ((SimpleCursorAdapter)list.getAdapter()).getCursor();
+	// move to the desired position
+	c.moveToPosition(position);
+	// pass it to our history object
+	History history = new History(c);
+	// create geo uri
 	Uri uri = Uri.parse("geo:0,0?q=" + history.latitude + "," + history.longitude + "&z=10");
+	// create intent
 	Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+	// launch intent
 	startActivity(intent);
     }
 
