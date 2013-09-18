@@ -16,10 +16,15 @@ import android.content.Intent;
 import android.content.Context;
 import android.net.Uri;
 import android.database.Cursor;
-
+import java.util.Date;
 
 import com.snot.whereareyou.database.History;
 import com.snot.whereareyou.database.Provider;
+
+// TODO:
+//	swipe to dismiss
+//	delete entire hist
+
 
 public class HistoryListFragment extends ListFragment {
 
@@ -47,12 +52,12 @@ public class HistoryListFragment extends ListFragment {
 			Cursor c = getCursor();
 			c.moveToPosition(position);
 			String phoneNumber = c.getString(c.getColumnIndex(History.COL_PHONE_NUMBER));
-			// TODO: show ts
-			//String datetime = c.getString(c.getColumnIndex(History.COL_TIMESTAMP));
+			long timeStamp = c.getLong(c.getColumnIndex(History.COL_TIMESTAMP));
 			String name = MainActivity.getContactName(context, phoneNumber);
 
 			text1.setText(name);
-			text2.setText(phoneNumber);
+			Date date = new java.util.Date((long)timeStamp*1000);
+			text2.setText(date.toString());
 
 			return row;
 		}
@@ -65,7 +70,8 @@ public class HistoryListFragment extends ListFragment {
             @Override
             public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 	    // TODO: order by ts
-                return new CursorLoader(getActivity(), Provider.URI_HISTORYS, History.FIELDS, null, null, null);
+		String sortOrder = History.COL_TIMESTAMP + " DESC";
+                return new CursorLoader(getActivity(), Provider.URI_HISTORYS, History.FIELDS, null, null, sortOrder);
             }
 
             @Override

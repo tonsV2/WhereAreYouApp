@@ -65,6 +65,8 @@ public class GcmIntentService extends IntentService {
 	history.latitude = latitude;
 	history.longitude = longitude;
 	history.phoneNumber = phoneNumber;
+	long unixTime = System.currentTimeMillis() / 1000L;
+	history.timestamp =String.valueOf(unixTime);
 	// TODO: use provider
 	DatabaseHandler.getInstance(this).putHistory(history);
 

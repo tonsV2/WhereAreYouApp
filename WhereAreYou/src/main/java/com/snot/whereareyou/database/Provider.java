@@ -60,13 +60,10 @@ public class Provider extends ContentProvider {
         switch(match)
         {
             case HISTORYS:
-	    	// TODO: db = DatabaseHandler.getInstance(getContext()).getReadableDatabase();
-		//       result = db.query(...);
                 result = DatabaseHandler
                     .getInstance(getContext())
                     .getReadableDatabase()
-                    //.query(History.TABLE_NAME, History.FIELDS, null, null, null, null, null, null);
-                    .query(History.TABLE_NAME, History.FIELDS, selection, selectionArgs, null, null, null, null);
+                    .query(History.TABLE_NAME, History.FIELDS, selection, selectionArgs, null, null, sortOrder);
                 result.setNotificationUri(getContext().getContentResolver(), URI_HISTORYS);
                 break;
             case HISTORY:
@@ -76,7 +73,7 @@ public class Provider extends ContentProvider {
                     .getReadableDatabase()
                     .query(History.TABLE_NAME, History.FIELDS,
                             History.COL_ID + " IS ?",
-                            new String[] { String.valueOf(eid) }, null, null, null, null);
+                            new String[] { String.valueOf(eid) }, null, null, sortOrder);
                 result.setNotificationUri(getContext().getContentResolver(), URI_HISTORYS);
                 break;
             default:

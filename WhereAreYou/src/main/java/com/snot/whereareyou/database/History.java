@@ -39,15 +39,15 @@ public class History {
                     + COL_LATITUDE + " TEXT NOT NULL,"
                     + COL_LONGITUDE + " TEXT NOT NULL,"
                     + COL_PHONE_NUMBER + " TEXT NOT NULL,"
-                    + COL_TIMESTAMP + " DATETIME NOT NULL default CURRENT_TIMESTAMP"
+                    + COL_TIMESTAMP + " TEXT NOT NULL"
                     + ")";
 
     // Fields corresponding to database columns
     public long id = -1;
-    public String latitude = "";
-    public String longitude = "";
-    public String phoneNumber = "";
-    public String timestamp = "";
+    public String latitude;
+    public String longitude;
+    public String phoneNumber;
+    public String timestamp;
 
     /**
      * No need to do anything, fields are already set to default values above
