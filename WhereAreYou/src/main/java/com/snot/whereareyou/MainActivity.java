@@ -28,6 +28,9 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 
 
+import android.content.ContentResolver;
+import android.provider.ContactsContract.PhoneLookup;
+
 import java.net.URLEncoder;
 import java.io.UnsupportedEncodingException;
 import java.io.IOException;
@@ -233,6 +236,26 @@ public class MainActivity extends TabsFragmentActivity {
             // should never happen
             throw new RuntimeException("Could not get package name: " + e);
         }
+    }
+
+/* Get name of contact by phone number
+ * http://stackoverflow.com/questions/3079365/android-retrieve-contact-name-from-phone-number
+ */
+    public static String getContactName(Context context, String phoneNumber) {
+        ContentResolver cr = context.getContentResolver();
+        Uri uri = Uri.withAppendedPath(PhoneLookup.CONTENT_FILTER_URI, Uri.encode(phoneNumber));
+        Cursor cursor = cr.query(uri, new String[]{PhoneLookup.DISPLAY_NAME}, null, null, null);
+        if (cursor == null) {
+            return null;
+        }
+        String contactName = null;
+        if(cursor.moveToFirst()) {
+            contactName = cursor.getString(cursor.getColumnIndex(PhoneLookup.DISPLAY_NAME));
+        }
+        if(cursor != null && !cursor.isClosed()) {
+            cursor.close();
+        }
+        return contactName;
     }
 
 }

@@ -113,6 +113,7 @@ public class PickContactFragment extends Fragment {
 //		Toast.makeText(this, "SMS send to " + phoneNumber + ".\nAwaiting response...", Toast.LENGTH_SHORT).show();
         }
 
+// TODO: confirm that the text is send... no error if missing sim card
         /** SMS sender with support for big messages
          * @param phoneNumber
          * @param message

@@ -8,10 +8,14 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.Toast;
+import android.widget.TextView;
 import android.content.Intent;
+import android.content.Context;
 import android.net.Uri;
+import android.database.Cursor;
 
 
 import com.snot.whereareyou.database.History;
@@ -26,18 +30,41 @@ public class HistoryListFragment extends ListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setListAdapter(new SimpleCursorAdapter(getActivity(),
+	final Context context = getActivity();
+        SimpleCursorAdapter adapter = new SimpleCursorAdapter(getActivity(),
             android.R.layout.simple_list_item_2,
             null,
-	    //TODO: phone number to name...
             new String[] { History.COL_PHONE_NUMBER, History.COL_TIMESTAMP },
             new int[] { android.R.id.text1, android.R.id.text2 },
-            0));
+            0) {
+		@Override
+		public View getView(int position, View view, ViewGroup parent)
+		{
+			View row = super.getView(position, view, parent);
+			TextView text1 = (TextView)row.findViewById(android.R.id.text1);
+			TextView text2 = (TextView)row.findViewById(android.R.id.text2);
+
+			Cursor c = getCursor();
+			c.moveToPosition(position);
+			String phoneNumber = c.getString(c.getColumnIndex(History.COL_PHONE_NUMBER));
+			// TODO: show ts
+			//String datetime = c.getString(c.getColumnIndex(History.COL_TIMESTAMP));
+			String name = MainActivity.getContactName(context, phoneNumber);
+
+			text1.setText(name);
+			text2.setText(phoneNumber);
+
+			return row;
+		}
+	    };
+
+	setListAdapter(adapter);
 
         // Load the content
         getLoaderManager().initLoader(0, null, new LoaderManager.LoaderCallbacks<Cursor>() {
             @Override
             public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+	    // TODO: order by ts
                 return new CursorLoader(getActivity(), Provider.URI_HISTORYS, History.FIELDS, null, null, null);
             }
 

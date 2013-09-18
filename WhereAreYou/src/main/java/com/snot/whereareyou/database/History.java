@@ -39,7 +39,7 @@ public class History {
                     + COL_LATITUDE + " TEXT NOT NULL,"
                     + COL_LONGITUDE + " TEXT NOT NULL,"
                     + COL_PHONE_NUMBER + " TEXT NOT NULL,"
-                    + COL_TIMESTAMP + " TIMESTAMP NOT NULL default current_timestamp"
+                    + COL_TIMESTAMP + " DATETIME NOT NULL default CURRENT_TIMESTAMP"
                     + ")";
 
     // Fields corresponding to database columns

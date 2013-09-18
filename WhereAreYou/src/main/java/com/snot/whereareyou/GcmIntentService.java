@@ -30,9 +30,6 @@ import android.util.Log;
 import android.net.Uri;
 import android.app.Notification;
 
-import android.content.ContentResolver;
-import android.provider.ContactsContract.PhoneLookup;
-import android.database.Cursor;
 //import android.database.sqlite.SQLiteDatabase;
 
 import com.snot.whereareyou.database.History;
@@ -68,11 +65,11 @@ public class GcmIntentService extends IntentService {
 	history.latitude = latitude;
 	history.longitude = longitude;
 	history.phoneNumber = phoneNumber;
-	//final SQLiteDatabase db = DatabaseHandler.getInstance(this).putHistory(history);
+	// TODO: use provider
 	DatabaseHandler.getInstance(this).putHistory(history);
 
 	Uri uri = Uri.parse("geo:0,0?q=" + latitude + "," + longitude + "&z=10");
-	String message = "Location received from... " + getContactName(this, phoneNumber);
+	String message = "Location from: " + MainActivity.getContactName(this, phoneNumber);
 	sendNotification(message, uri);
 
 //        Bundle extras = intent.getExtras();
@@ -153,26 +150,6 @@ public class GcmIntentService extends IntentService {
 
         mBuilder.setContentIntent(contentIntent);
         mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
-    }
-
-/* Get name of contact by phone number
- * http://stackoverflow.com/questions/3079365/android-retrieve-contact-name-from-phone-number
- */
-    public static String getContactName(Context context, String phoneNumber) {
-        ContentResolver cr = context.getContentResolver();
-        Uri uri = Uri.withAppendedPath(PhoneLookup.CONTENT_FILTER_URI, Uri.encode(phoneNumber));
-        Cursor cursor = cr.query(uri, new String[]{PhoneLookup.DISPLAY_NAME}, null, null, null);
-        if (cursor == null) {
-            return null;
-        }
-        String contactName = null;
-        if(cursor.moveToFirst()) {
-            contactName = cursor.getString(cursor.getColumnIndex(PhoneLookup.DISPLAY_NAME));
-        }
-        if(cursor != null && !cursor.isClosed()) {
-            cursor.close();
-        }
-        return contactName;
     }
 }
 
