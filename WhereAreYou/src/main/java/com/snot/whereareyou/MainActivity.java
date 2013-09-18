@@ -62,8 +62,6 @@ public class MainActivity extends TabsFragmentActivity {
 	// Log tag
 	static final String TAG = "GCM Demo";
 
-	TextView mDisplay;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -180,13 +178,13 @@ public class MainActivity extends TabsFragmentActivity {
         new AsyncTask<Void, Void, String>() {
             @Override
             protected String doInBackground(Void... params) {
-                String msg = "";
+                //String msg = "";
                 try {
                     if (gcm == null) {
                         gcm = GoogleCloudMessaging.getInstance(context);
                     }
                     regid = gcm.register(SENDER_ID);
-                    msg = "Device registered, registration ID=" + regid;
+                    //msg = "Device registered, registration ID=" + regid;
 
                     // You should send the registration ID to your server over HTTP, so it
                     // can use GCM/HTTP or CCS to send messages to your app.
@@ -199,17 +197,18 @@ public class MainActivity extends TabsFragmentActivity {
                     // Persist the regID - no need to register again.
                     storeRegistrationId(context, regid);
                 } catch (IOException ex) {
-                    msg = "Error :" + ex.getMessage();
+			ex.printStackTrace();
+                    //msg = "Error :" + ex.getMessage();
                     // If there is an error, don't just keep trying to register.
                     // Require the user to click a button again, or perform
                     // exponential back-off.
                 }
-                return msg;
+                return regid;
             }
 
             @Override
-            protected void onPostExecute(String msg) {
-                mDisplay.append(msg + "\n");
+            protected void onPostExecute(String regid) {
+	    // TODO: something should be done here... only after this point has been reached are we ready to receive GCM
             }
         }.execute(null, null, null);
     }
