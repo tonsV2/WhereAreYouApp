@@ -1,37 +1,26 @@
 package com.snot.whereareyou;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.gcm.GoogleCloudMessaging;
-
-import android.os.Bundle;
 import android.app.Activity;
+import android.app.PendingIntent;
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager.NameNotFoundException;
-import android.os.AsyncTask;
-import android.util.Log;
-import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.Button;
-import android.view.View.OnClickListener;
+import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
+import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
-import android.content.Intent;
-import android.view.View;
-import android.view.LayoutInflater;
-import android.view.ViewGroup;
-import android.net.Uri;
-import android.database.Cursor;
-import android.telephony.SmsManager;
-import android.app.PendingIntent;
-
 import android.support.v4.app.Fragment;
+import android.telephony.SmsManager;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.Toast;
 
-import java.net.URLEncoder;
 import java.io.UnsupportedEncodingException;
-import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 
 /**

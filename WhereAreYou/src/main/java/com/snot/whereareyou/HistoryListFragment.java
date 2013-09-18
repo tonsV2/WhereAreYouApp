@@ -1,6 +1,9 @@
 package com.snot.whereareyou;
 
+import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
@@ -10,16 +13,12 @@ import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.Toast;
 import android.widget.TextView;
-import android.content.Intent;
-import android.content.Context;
-import android.net.Uri;
-import android.database.Cursor;
-import java.util.Date;
 
 import com.snot.whereareyou.database.History;
 import com.snot.whereareyou.database.Provider;
+
+import java.util.Date;
 
 // TODO:
 //	swipe to dismiss

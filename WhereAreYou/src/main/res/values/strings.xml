@@ -4,5 +4,6 @@
     <string name="app_name">Where Are You?</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
+    <string name="info">Click the button below to select a contact to whom you wish to send a location request.</string>
 
 </resources>

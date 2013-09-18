@@ -1,42 +1,22 @@
 package com.snot.whereareyou;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.gcm.GoogleCloudMessaging;
-
-import android.os.Bundle;
-import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.os.AsyncTask;
-import android.util.Log;
-import android.widget.TextView;
-import android.widget.Toast;
-import android.provider.ContactsContract;
-import android.provider.ContactsContract.CommonDataKinds.Phone;
-import android.content.Intent;
-import android.view.View;
-import android.net.Uri;
 import android.database.Cursor;
-import android.telephony.SmsManager;
-import android.app.PendingIntent;
-
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-
-
-import android.content.ContentResolver;
+import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.Bundle;
 import android.provider.ContactsContract.PhoneLookup;
+import android.util.Log;
 
-import java.net.URLEncoder;
-import java.io.UnsupportedEncodingException;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.gcm.GoogleCloudMessaging;
+
 import java.io.IOException;
-import java.util.ArrayList;
-
-import com.snot.whereareyou.TabsFragmentActivity;
 
 /**
  * GCM - http://developer.android.com/google/gcm/client.html
