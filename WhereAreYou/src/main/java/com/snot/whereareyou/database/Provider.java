@@ -22,7 +22,7 @@ public class Provider extends ContentProvider {
 	public static final Uri URI_HISTORYS = (new Uri.Builder())
 						.scheme(ContentResolver.SCHEME_CONTENT)
 						.authority(AUTHORITY)
-						.appendPath("/history")
+						.appendPath("history")
 						.build();
 
 
