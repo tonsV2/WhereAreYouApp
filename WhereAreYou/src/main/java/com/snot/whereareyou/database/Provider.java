@@ -6,6 +6,7 @@ import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.net.Uri;
+import android.net.Uri.Builder;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -16,12 +17,14 @@ public class Provider extends ContentProvider {
 
     private static final String TAG = "Provider";
 
-    private static final String SCHEME = "content://";
     private static final String AUTHORITY = "com.snot.whereareyou.database.provider";
-    private static final String BASE_URI = SCHEME + AUTHORITY;
 
-// TODO: use Uri.Builder as done here... http://stackoverflow.com/questions/14868610/urimatcher-does-not-match-a-pattern
-    public static final Uri URI_HISTORYS = Uri.parse(BASE_URI + "/history");
+	public static final Uri URI_HISTORYS = (new Uri.Builder())
+						.scheme(ContentResolver.SCHEME_CONTENT)
+						.authority(AUTHORITY)
+						.appendPath("/history")
+						.build();
+
 
     private static final int HISTORY = 1;
     private static final int HISTORYS = 2;
