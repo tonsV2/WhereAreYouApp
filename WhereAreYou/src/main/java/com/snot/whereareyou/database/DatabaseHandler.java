@@ -22,15 +22,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     private static final int DATABASE_VERSION = 1;
-    // TODO: find better name...
     private static final String DATABASE_NAME = "whereareyou.sqlite3";
 
     private final Context context;
 
     public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
-        // Good idea to use process context here
-        this.context = context.getApplicationContext();
+        this.context = context;
     }
 
     @Override
@@ -103,7 +101,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     private void notifyProviderOnHistoryChange() {
-        context.getContentResolver().notifyChange(Provider.URI_HISTORYS, null, false);
+        context.getContentResolver().notifyChange(Provider.URI_HISTORY, null, false);
     }
 }
 

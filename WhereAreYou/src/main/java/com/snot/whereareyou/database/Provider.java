@@ -19,7 +19,7 @@ public class Provider extends ContentProvider {
 
     private static final String AUTHORITY = "com.snot.whereareyou.database.provider";
 
-	public static final Uri URI_HISTORYS = (new Uri.Builder())
+	public static final Uri URI_HISTORY = (new Uri.Builder())
 						.scheme(ContentResolver.SCHEME_CONTENT)
 						.authority(AUTHORITY)
 						.appendPath("history")
@@ -67,7 +67,7 @@ public class Provider extends ContentProvider {
                     .getInstance(getContext())
                     .getReadableDatabase()
                     .query(History.TABLE_NAME, History.FIELDS, selection, selectionArgs, null, null, sortOrder);
-                result.setNotificationUri(getContext().getContentResolver(), URI_HISTORYS);
+                result.setNotificationUri(getContext().getContentResolver(), URI_HISTORY);
                 break;
             case HISTORY:
                 final long eid = Long.parseLong(uri.getLastPathSegment());
@@ -77,7 +77,7 @@ public class Provider extends ContentProvider {
                     .query(History.TABLE_NAME, History.FIELDS,
                             History.COL_ID + " IS ?",
                             new String[] { String.valueOf(eid) }, null, null, sortOrder);
-                result.setNotificationUri(getContext().getContentResolver(), URI_HISTORYS);
+                result.setNotificationUri(getContext().getContentResolver(), URI_HISTORY);
                 break;
             default:
                 throw new UnsupportedOperationException("Unmatched(" + match + ") URI: " + uri.toString());
@@ -111,7 +111,7 @@ public class Provider extends ContentProvider {
                     .delete(History.TABLE_NAME,
                             History.COL_ID + " IS ?",
                             new String[] { String.valueOf(id) });
-            result.setNotificationUri(getContext().getContentResolver(), URI_HISTORYS);
+            result.setNotificationUri(getContext().getContentResolver(), URI_HISTORY);
         }
         return result;
 */
