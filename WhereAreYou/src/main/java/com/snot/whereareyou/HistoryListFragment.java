@@ -68,7 +68,6 @@ public class HistoryListFragment extends ListFragment {
         getLoaderManager().initLoader(0, null, new LoaderManager.LoaderCallbacks<Cursor>() {
             @Override
             public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-	    // TODO: order by ts
 		String sortOrder = History.COL_TIMESTAMP + " DESC";
                 return new CursorLoader(getActivity(), Provider.URI_HISTORYS, History.FIELDS, null, null, sortOrder);
             }
