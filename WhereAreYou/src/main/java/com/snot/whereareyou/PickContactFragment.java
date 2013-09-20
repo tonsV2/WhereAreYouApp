@@ -78,10 +78,10 @@ public class PickContactFragment extends Fragment {
 	private void handleContact(Intent intent)
 	{
 		final String phoneNumber = getPhoneNumber(intent);
+		final Context context = getActivity();
 
 		String url = "";
                 try {
-			Context context = getActivity();
 			String regId = ((MainActivity)context).getRegistrationId(context);
 			String query = "?regId=" + URLEncoder.encode(regId, "UTF-8") + "&phoneNumber=" + URLEncoder.encode(phoneNumber, "UTF-8");
                         url = "https://whereareyoudroid.appspot.com/location" + query;
@@ -93,9 +93,9 @@ public class PickContactFragment extends Fragment {
 		ShortenUrlTask task = new ShortenUrlTask() {
 			@Override
 			protected void onPostExecute(String result) {
-				String message = "Where are you? Please click the following link to let me know.\n" + result;
+				String message = context.getString(R.string.sms_message) + result;
 				sendSMS(phoneNumber, message);
-				Toast.makeText(getActivity(), "Location request sent", Toast.LENGTH_SHORT).show();
+				Toast.makeText(context, context.getString(R.string.sms_send_toast), Toast.LENGTH_SHORT).show();
 			}
 		};
 		task.execute(url);
@@ -103,6 +103,9 @@ public class PickContactFragment extends Fragment {
         }
 
 // TODO: confirm that the text is send... no error if missing sim card
+// Also do something to show that the text has been delivered... toast and perhaps show something in hist.
+// perhaps use something from... http://stackoverflow.com/questions/7926506/toast-wont-show-up-on-sms-app
+// also... http://developer.android.com/reference/android/telephony/SmsManager.html#sendMultipartTextMessage(java.lang.String, java.lang.String, java.util.ArrayList<java.lang.String>, java.util.ArrayList<android.app.PendingIntent>, java.util.ArrayList<android.app.PendingIntent>)
         /** SMS sender with support for big messages
          * @param phoneNumber
          * @param message

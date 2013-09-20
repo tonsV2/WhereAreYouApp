@@ -67,7 +67,9 @@ public class GcmIntentService extends IntentService {
 	DatabaseHandler.getInstance(this).putHistory(history);
 
 	Uri uri = Uri.parse("geo:0,0?q=" + latitude + "," + longitude + "&z=10");
-	String message = "Location from: " + MainActivity.getContactName(this, phoneNumber);
+
+	Context c = getApplicationContext();
+	String message = c.getString(R.string.notification_message) + " " + MainActivity.getContactName(this, phoneNumber);
 	sendNotification(message, uri);
 
 //        Bundle extras = intent.getExtras();
@@ -118,10 +120,6 @@ public class GcmIntentService extends IntentService {
                         .setSmallIcon(R.drawable.ic_launcher)
                         .setContentIntent(pIntent)
                         .build();
-//// Make sure the notification behaves normal
-//                notification.defaults |= Notification.DEFAULT_SOUND;
-//                notification.defaults |= Notification.DEFAULT_VIBRATE;
-//                notification.defaults |= Notification.DEFAULT_LIGHTS;
 		notification.defaults |= Notification.DEFAULT_ALL;
 // Hide the notification after its selected
                 notification.flags |= Notification.FLAG_AUTO_CANCEL;

@@ -59,8 +59,8 @@ public class MainActivity extends TabsFragmentActivity {
 			Log.i(TAG, "No valid Google Play Services APK found.");
 		}
 
-		this.addTab("main", "Main", PickContactFragment.class);
-		this.addTab("hist", "History", HistoryListFragment.class);
+		this.addTab("main", getString(R.string.tab_pick_contact_title), PickContactFragment.class);
+		this.addTab("hist", getString(R.string.tab_history_title), HistoryListFragment.class);
 
 		restoreFromSavedInstanceState(savedInstanceState);
 	}
@@ -123,7 +123,6 @@ public class MainActivity extends TabsFragmentActivity {
 
     /**
      * Gets the current registration ID for application on GCM service, if there is one.
-     * <p>
      * If result is empty, the app needs to register.
      *
      * @return registration ID, or empty string if there is no existing
@@ -158,30 +157,20 @@ public class MainActivity extends TabsFragmentActivity {
         new AsyncTask<Void, Void, String>() {
             @Override
             protected String doInBackground(Void... params) {
-                //String msg = "";
                 try {
                     if (gcm == null) {
                         gcm = GoogleCloudMessaging.getInstance(context);
                     }
                     regid = gcm.register(SENDER_ID);
-                    //msg = "Device registered, registration ID=" + regid;
 
                     // You should send the registration ID to your server over HTTP, so it
                     // can use GCM/HTTP or CCS to send messages to your app.
                     //sendRegistrationIdToBackend();
 
-                    // For this demo: we don't need to send it because the device will send
-                    // upstream messages to a server that echo back the message using the
-                    // 'from' address in the message.
-
                     // Persist the regID - no need to register again.
                     storeRegistrationId(context, regid);
                 } catch (IOException ex) {
 			ex.printStackTrace();
-                    //msg = "Error :" + ex.getMessage();
-                    // If there is an error, don't just keep trying to register.
-                    // Require the user to click a button again, or perform
-                    // exponential back-off.
                 }
                 return regid;
             }

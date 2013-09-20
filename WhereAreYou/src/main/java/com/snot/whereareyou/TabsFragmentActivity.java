@@ -20,7 +20,6 @@ import android.widget.TabWidget;
  */
 
 /* ref: http://developer.android.com/resources/samples/Support4Demos/src/com/example/android/supportv4/app/FragmentTabsPager.html
- * TODO: implement horizontal view...
  * TODO: hide header, add action bar, change header icon, etc. lots of customizations
  */
 

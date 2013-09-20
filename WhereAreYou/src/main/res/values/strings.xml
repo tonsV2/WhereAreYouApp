@@ -3,7 +3,13 @@
 
     <string name="app_name">Where Are You?</string>
     <string name="action_settings">Settings</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="info">Click the button below to select a contact to whom you wish to send a location request.</string>
+    <string name="info">Click the button below to select a contact you wish to know where is.\nDoing so will send an SMS to that contact and when the contact click the link in the text the location will be send back to you.</string>
+    <string name="notification_message">Location of: </string>
+
+    <string name="tab_pick_contact_title">Main</string>
+    <string name="tab_history_title">History</string>
+
+    <string name="sms_message">Where are you? Please click the following link to let me know.\n</string>
+    <string name="sms_send_toast">Location request sent</string>
 
 </resources>
