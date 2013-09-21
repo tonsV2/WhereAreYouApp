@@ -12,6 +12,9 @@ import android.os.Bundle;
 import android.provider.ContactsContract.PhoneLookup;
 import android.util.Log;
 
+import android.view.WindowManager.LayoutParams;
+import android.graphics.PixelFormat;
+
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -34,7 +37,7 @@ public class MainActivity extends TabsFragmentActivity {
 	private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 	private static final String PROPERTY_APP_VERSION = "appVersion";
 
-	String SENDER_ID = "372247536430";
+	String SENDER_ID;
 	String regid;
 
 	GoogleCloudMessaging gcm;
@@ -47,6 +50,8 @@ public class MainActivity extends TabsFragmentActivity {
 		super.onCreate(savedInstanceState);
 
 		context = getApplicationContext();
+		String SENDER_ID = context.getString(R.string.sender_id);
+
 		if (checkPlayServices()) {
 			gcm = GoogleCloudMessaging.getInstance(this);
 			regid = getRegistrationId(context);

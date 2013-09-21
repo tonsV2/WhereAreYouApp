@@ -1,6 +1,7 @@
 package com.snot.whereareyou;
 
 import android.os.AsyncTask;
+import android.content.Context;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -23,11 +24,17 @@ import java.io.UnsupportedEncodingException;
 //       make it such that the long url is returned
 
 public class ShortenUrlTask extends AsyncTask<String, Void, String> {
+	private Context context;
+
+	public ShortenUrlTask(Context context)
+	{
+		this.context = context;
+	}
 
 	@Override
 	protected String doInBackground(String... url) {
 		String mLongUrl = url[0];
-		String API_KEY = "AIzaSyBrux8v37VrTuSalEm-BJ2nYoJoLxSljq0";
+		String API_KEY = context.getString(R.string.api_key);
 		String API_URL = "https://www.googleapis.com/urlshortener/v1/url?key=" + API_KEY;
 
 		try {

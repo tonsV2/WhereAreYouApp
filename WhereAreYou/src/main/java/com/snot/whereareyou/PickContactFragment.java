@@ -90,7 +90,7 @@ public class PickContactFragment extends Fragment {
                         e.printStackTrace();
                 }
 
-		ShortenUrlTask task = new ShortenUrlTask() {
+		ShortenUrlTask task = new ShortenUrlTask(context) {
 			@Override
 			protected void onPostExecute(String result) {
 				String message = context.getString(R.string.sms_message) + result;
