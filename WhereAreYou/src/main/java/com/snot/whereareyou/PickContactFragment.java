@@ -38,7 +38,7 @@ public class PickContactFragment extends Fragment {
 	private static final int PICK_CONTACT_REQUEST = 1;  // The request code
 
 	// Log tag
-	static final String TAG = "GCM Demo";
+	static final String TAG = "PickContactFragment";
 
 	@Override
 	public View onCreateView (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -84,7 +84,7 @@ public class PickContactFragment extends Fragment {
                 try {
 			String regId = ((MainActivity)context).getRegistrationId(context);
 			String query = "?regId=" + URLEncoder.encode(regId, "UTF-8") + "&phoneNumber=" + URLEncoder.encode(phoneNumber, "UTF-8");
-                        url = "https://whereareyoudroid.appspot.com/location" + query;
+                        url = getString(R.string.backend_url) + query;
                 } catch (UnsupportedEncodingException e) {
                         // TODO Auto-generated catch block
                         e.printStackTrace();

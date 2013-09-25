@@ -43,7 +43,7 @@ public class MainActivity extends TabsFragmentActivity {
 	GoogleCloudMessaging gcm;
 	Context context;
 	// Log tag
-	static final String TAG = "GCM Demo";
+	static final String TAG = "MainActivity";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +56,7 @@ public class MainActivity extends TabsFragmentActivity {
 			gcm = GoogleCloudMessaging.getInstance(this);
 			regid = getRegistrationId(context);
 			if (regid.isEmpty()) {
-				registerInBackground();
+				registerInBackground(SENDER_ID);
 			}
 		}
 		else
@@ -158,7 +158,7 @@ public class MainActivity extends TabsFragmentActivity {
      * Stores the registration ID and the app versionCode in the application's
      * shared preferences.
      */
-    private void registerInBackground() {
+    private void registerInBackground(final String sender_id) {
         new AsyncTask<Void, Void, String>() {
             @Override
             protected String doInBackground(Void... params) {
@@ -166,7 +166,8 @@ public class MainActivity extends TabsFragmentActivity {
                     if (gcm == null) {
                         gcm = GoogleCloudMessaging.getInstance(context);
                     }
-                    regid = gcm.register(SENDER_ID);
+
+                    regid = gcm.register(sender_id);
 
                     // You should send the registration ID to your server over HTTP, so it
                     // can use GCM/HTTP or CCS to send messages to your app.
