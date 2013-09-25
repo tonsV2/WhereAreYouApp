@@ -22,8 +22,6 @@ import java.io.UnsupportedEncodingException;
 // http://login2win.blogspot.dk/2012/07/android-shorten-url-implementation.html
 // https://developers.google.com/url-shortener/v1/getting_started
 
-// TODO: if urlshortener api is disabled null is returned...
-//       make it such that the long url is returned
 
 public class ShortenUrlTask extends AsyncTask<String, Void, String> {
 	private Context context;
