@@ -2,6 +2,8 @@ package com.snot.whereareyou;
 
 import android.os.AsyncTask;
 import android.content.Context;
+import android.widget.Toast;
+import android.util.Log;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -25,16 +27,19 @@ import java.io.UnsupportedEncodingException;
 
 public class ShortenUrlTask extends AsyncTask<String, Void, String> {
 	private Context context;
+	private static final String TAG ="ShortenUrlTask";
 
 	public ShortenUrlTask(Context context)
 	{
+		Log.v(TAG, "called");
 		this.context = context;
 	}
 
 	@Override
 	protected String doInBackground(String... url) {
+		Log.v(TAG + ".doInBackground", "called");
 		String mLongUrl = url[0];
-		String API_KEY = context.getString(R.string.api_key);
+		String API_KEY = context.getString(R.string.server_api_key);
 		String API_URL = "https://www.googleapis.com/urlshortener/v1/url?key=" + API_KEY;
 
 		try {
@@ -56,6 +61,7 @@ public class ShortenUrlTask extends AsyncTask<String, Void, String> {
 			request.setEntity(new StringEntity(obj.toString(), "UTF-8"));
 
 			HttpResponse response = hc.execute(request);
+			Log.v(TAG, response.toString());
 
 			if(response.getStatusLine().getStatusCode() == HttpStatus.SC_OK)
 			{
@@ -63,11 +69,8 @@ public class ShortenUrlTask extends AsyncTask<String, Void, String> {
 				response.getEntity().writeTo(out);
 				out.close();
 				final JSONObject json = new JSONObject(out.toString());
-				return json.getString("id");
-			}
-			else
-			{
-				return null;
+				String shortUrl = json.getString("id");
+				return shortUrl;
 			}
 		}
 		catch(JSONException e)
@@ -82,7 +85,8 @@ public class ShortenUrlTask extends AsyncTask<String, Void, String> {
 		{
 			e.printStackTrace();
 		}
-		return null;
+		// if anything fails simply return original url
+		return mLongUrl;
 	}
 }
 
