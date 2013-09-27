@@ -18,7 +18,7 @@ In other words the first time you receive a location reponse you have to click i
 
 Open Source
 ===========
-You can find the source code for this app at https://bitbucket.org/snot/where-are-you
+You can find the source code for this app at <https://github.com/snot/WhereAreYouApp>
 The server side is open source as well but I'd like to clean it up a bit before publicly releasing. Which might never happen so if you want it feel free to send me a mail and you can have it.
 
 
